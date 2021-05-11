@@ -1,5 +1,5 @@
 const { program } = require("commander");
-const { pickPlatforms, askCredentials } = require("./lib/inquirer");
+const { setup, askCredentials } = require("./lib/inquirer");
 
 program.version(
   require("./package").version,
@@ -7,16 +7,27 @@ program.version(
   "output the current version"
 );
 
-program.description("set a profile picture for your social media accounts");
+program.description("set a profile picture for all your social media accounts");
 program.parse();
 
 let selectedPlatforms = [];
-pickPlatforms()
-  .then(({ platforms }) => {
+let inputPath = "";
+let inputCredentials = {};
+setup()
+  .then(({ platforms, path }) => {
     selectedPlatforms = platforms;
-    askCredentials(platforms);
+    inputPath = path;
+    return askCredentials(platforms);
   })
-  .then((credentials) => console.log(credentials))
+  .then((credentials) => {
+    selectedPlatforms.forEach((platform) => {
+      inputCredentials[platform.toLocaleLowerCase()] = {
+        username: credentials[`${platform}_username`.toLocaleLowerCase()],
+        password: credentials[`${platform}_password`.toLocaleLowerCase()],
+      };
+    });
+    console.log(inputCredentials);
+  })
   .catch((err) => {
     console.error("Unexpected error!");
     console.error(err);
