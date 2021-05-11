@@ -18,8 +18,10 @@
   "author": "shayan-shojaei",
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.4.0",
     "commander": "^7.2.0",
     "inquirer": "^8.0.0",
+    "instagram-private-api": "^1.44.1",
     "is-image": "^3.0.0"
   }
 }
